@@ -1,0 +1,20 @@
+[
+    {
+        "img":"img/hero-img-1.jpg",
+        "name":"Shirts",
+        "discount":"20%"
+    },
+
+    {
+        "img":"img/hero-img-2.jpg",
+        "name":"Jackets",
+        "discount":"50%"
+    },
+
+    {
+        "img":"img/hero-img-3.jpg",
+        "name":"Shorts",
+        "discount":"80%"
+    }
+    
+]
