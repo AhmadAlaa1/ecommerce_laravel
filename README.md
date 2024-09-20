@@ -19,11 +19,11 @@ This is a fully functional and responsive e-commerce website built using **HTML*
 
 ## Pages
 
-- `index.html` - Home page with a list of products.
-- `product.html` - Individual product detail page.
-- `cart.html` - Shopping cart page to manage selected products.
-- `checkout.html` - Checkout page to finalize purchases.
-- `thankyou.html` - Thank you page displayed after successful order placement.
+- `Home` - Home page with a list of products.
+- `Shop` - Individual product detail page.
+- `cart` - Shopping cart page to manage selected products.
+- `checkout` - Checkout page to finalize purchases.
+- `Contact` - Contact Page To Send Message To the admins.
 
 ## Technologies Used
 
@@ -45,7 +45,7 @@ This is a fully functional and responsive e-commerce website built using **HTML*
    
 3. Run the project on a local server. You can use XAMPP, MAMP, or any local server with PHP support.
 
-## Technologies Used
+## How To Use
 
 1. Open the website's homepage to browse available products.
 2. Click on a product to view its details.
