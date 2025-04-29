@@ -15,7 +15,7 @@ active
     <div style="visibility:hidden;">.</div>
     <div style="visibility:hidden;">.</div>
     
-<form method="POST" action={{route('home.registerauth')}}>
+<form method="POST" action={{route('home.registerauth')}} id="registerform">
     @csrf
     <input name="username" type="text" value="{{old('username')}}" class="w-100 form-control border-0 py-3 mb-4" placeholder="Your Name">
     <input name="useremail" type="email" value="{{old('useremail')}}" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your Email">
@@ -29,6 +29,28 @@ active
     </div>
     
 </form>
+
+<script>
+    document.getElementById('registerform').addEventListener('submit', function (e) {
+      e.preventDefault();
+  
+      const formData = new FormData(this);
+  
+      fetch('/api/register', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.redirect_url) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+          window.location.href = data.redirect_url;
+        } else {
+          alert(data.message || "Register failed");
+        }
+      });
+    });
+  </script>
 
 @if ($errors->any())
     <div class="alert alert-danger mt-3">

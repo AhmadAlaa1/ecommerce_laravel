@@ -96,9 +96,8 @@
                                     <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">0</span>
                                 @endif
                                 </a>
-                               @if(!Session::has('username'))
-                                <a href={{route('home.login')}}>Login</a>
-                               @else
+                                <a href="{{ route('home.login') }}" id="loginLinkWrapper">Login</a>
+                                <div id="user-logo">
                                 <div class="dropdown">
                                     <a href="#" class="my-auto dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i name="icon" class="fas fa-user fa-2x"></i>
@@ -110,20 +109,80 @@
                                         </li> --}}
                                         {{-- <li><hr class="dropdown-divider"></li> --}}
                                         <li>
-                                            <form method="GET" action={{route('home.logout')}}>
+                                            <form method="POST" action="{{ route('home.logout') }}" id="logoutform">
                                                 @csrf
+                                                <input type="hidden" name="token" id="tokeninput">
                                                 <button class="dropdown-item">Logout</button>
-                                            </form>    
+                                            </form>
+                                            
+                                            <script>
+                                              const user = JSON.parse(localStorage.getItem('user'));
+                                              if (user) {
+                                                document.getElementById('tokeninput').value = user.token;
+                                              }
+                                            </script>  
+                                            <script>
+                                                document.getElementById('logoutform').addEventListener('submit', function() {
+                                                    localStorage.clear();
+                                                });
+                                              </script>
+                                              
+                                            <script>
+                                              window.addEventListener('DOMContentLoaded', function() {
+                                                const user = JSON.parse(localStorage.getItem('user'));
+                                                const logoutForm = document.getElementById('logoutform');
+                                            
+                                                logoutForm.addEventListener('submit', function(e) {
+                                                  e.preventDefault();
+                                            
+                                                  if (!user || !user.token) {
+                                                    alert('Not logged in!');
+                                                    return;
+                                                  }
+                                            
+                                                  fetch('/api/logout', {  // <-- your logout API URL here
+                                                    method: 'POST',
+                                                    headers: {
+                                                      'Content-Type': 'application/json',
+                                                      'Authorization': `Bearer ${user.token}`
+                                                    },
+                                                  })
+                                                  .then(response => response.json())
+                                                  .then(data => {
+                                                    console.log(data); // Debug if you want
+                                                    localStorage.clear(); // Clear localStorage
+                                                    window.location.href = '/'; // <-- Redirect to homepage
+                                                  })
+                                                  .catch(error => {
+                                                    console.error('Logout failed:', error);
+                                                    alert('Something went wrong during logout.');
+                                                  });
+                                                });
+                                              });
+                                            </script>
+                                            
                                         </li>
                                     </ul>
-                                </div>                            
-                               @endif
+                                </div> 
+                            </div>                          
                         </div>
                     </div>
                 </nav>
             </div>
         </div>
-
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              const user = localStorage.getItem('user');
+          
+              if (user) {
+                document.getElementById('loginLinkWrapper').style.display = 'none';
+            } else {
+                document.getElementById('loginLinkWrapper').style.display = 'block';
+                document.getElementById('user-logo').style.display = 'none';
+              }
+            });
+          </script>
+          
     @yield('body')
 
     <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
@@ -219,6 +278,7 @@
 
  <!-- Template Javascript -->
  <script src="/js/main.js"></script>
+ {{-- <script src="/js/RefreshToken.js"></script> --}}
 
 </body>
 
