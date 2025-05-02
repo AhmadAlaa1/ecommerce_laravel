@@ -61,6 +61,29 @@
     </div>
 
   </div>
-
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = JSON.parse(localStorage.getItem('user'));
+  
+      // 🔐 If not logged in or not admin → redirect
+      if (!user || user.role !== 'admin') {
+        window.location.href = '/home';
+        return;
+      }
+  
+      // ✅ Access protected admin API
+      authFetch('/api/admin')
+        .then(res => res.json())
+        .then(data => {
+          console.log("Admin data:", data);
+          // Display it in your admin dashboard
+        })
+        .catch(err => {
+          console.error("Access denied or error:", err);
+          alert("You are not authorized.");
+        });
+    });
+  </script>
+  
 </body>
 </html>

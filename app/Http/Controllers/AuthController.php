@@ -20,32 +20,38 @@ class AuthController extends Controller
         $user=User::create([
             'name'=>$request->username,
             'email'=>$request->useremail,
-            'password'=>Hash::make($request->password)
+            'password'=>Hash::make($request->password),
+            'role' => 'user'
         ]);
         
         $token = Auth::guard('api')->login($user);
         $user->token = $token;
         
         return response()->json([
-            'user'=>$user,
-            'redirect_url' => route('home.index')
+            'token' => $token,
+            'redirect_url' => route('home.index'),
         ]);
     }
     
+
     public function login(Request $request){
         $credentials = $request->only(['email', 'password']);
+    
         $token = Auth::guard('api')->attempt($credentials);
     
         if (!$token) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-        $user = Auth::guard('api')->user();
-        $user->token = $token;
+    
+        $user = Auth::guard('api')->user(); // ✅ Add this line
+    
         return response()->json([
-            'user'=>$user,
-            'redirect_url' => route('home.index')
+            'token' => $token,
+            'redirect_url' => $user->role === 'admin' ? route('admin.index') : route('home.index'),
         ]);
     }
+    
+    
 
     public function logout(Request $request)
     {
