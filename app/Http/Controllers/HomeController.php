@@ -7,25 +7,29 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
     public function index(){
-        $shirts=Product::where("category_id",1)->get();
-        $jackets=Product::where("category_id",2)->get();
-        $shorts=Product::where("category_id",3)->get();
-        $bestProducts=Product::where("rating",'>',2)->get();
-        $categories=Category::all();
-        $comments=Comment::all();
-        return view('home.index',['shirts'=>$shirts,
-                                               'jackets'=>$jackets,
-                                               'shorts'=>$shorts,
-                                               'categories'=>$categories,
-                                               'bestProducts'=>$bestProducts,
-                                               'comments'=>$comments,
-                                              ]);
+        $shirts = Product::where("category_id", 1)->get();
+        $jackets = Product::where("category_id", 2)->get();
+        $shorts = Product::where("category_id", 3)->get();
+        $bestProducts = Product::where("rating", '>', 2)->get();
+
+        foreach ([$shirts, $jackets, $shorts, $bestProducts] as $collection) {
+            foreach ($collection as $product) {
+                $product->image = Crypt::decrypt($product->image);
+            }
+        }
+
+        $categories = Category::all();
+        $comments = Comment::all();
+
+        return view('home.index', compact('shirts', 'jackets', 'shorts', 'bestProducts', 'categories', 'comments'));
+
     }
 
     public function login(){

@@ -34,24 +34,22 @@ class AuthController extends Controller
     }
     
 
-    public function login(Request $request){
-        $credentials = $request->only(['email', 'password']);
-    
-        $token = Auth::guard('api')->attempt($credentials);
-    
-        if (!$token) {
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-    
-        $user = Auth::guard('api')->user(); // ✅ Add this line
-    
+
+        $user = Auth::guard('api')->user();
+
         return response()->json([
             'token' => $token,
-            'redirect_url' => $user->role === 'admin' ? route('admin.index') : route('home.index'),
+            'redirect_url' => $user->role === 'admin' ? '/admin' : '/home',
         ]);
     }
-    
-    
+
 
     public function logout(Request $request)
     {

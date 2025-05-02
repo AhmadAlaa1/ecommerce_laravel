@@ -152,7 +152,7 @@ active
                                             <div class="rounded position-relative fruite-item">
                                                 <div class="fruite-img">
                                                     <div class="fruite-img">
-                                                        <img src={{$shirt->img}} class="img-fluid w-100 rounded-top" alt="">
+                                                        <img src="{{ asset('storage/' . $shirt->image) }}" class="img-fluid w-100 rounded-top" alt="">
                                                     </div>
                                                     <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{$shirt->category->name}}</div>
                                                     <div class="p-4 border border-secondary border-top-0 rounded-bottom">
@@ -180,7 +180,7 @@ active
                                         <div class="col-md-6 col-lg-4 col-xl-3">
                                             <div class="rounded position-relative fruite-item">
                                                 <div class="fruite-img">
-                                                    <img src={{$jacket->img}} class="img-fluid w-100 rounded-top" alt="">
+                                                    <img src={{$jacket->image}} class="img-fluid w-100 rounded-top" alt="">
                                                 </div>
                                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{$jacket->category->name}}</div>
                                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
@@ -207,7 +207,7 @@ active
                                         <div class="col-md-6 col-lg-4 col-xl-3">
                                             <div class="rounded position-relative fruite-item">
                                                 <div class="fruite-img">
-                                                    <img src={{$short->img}} class="img-fluid w-100 rounded-top" alt="">
+                                                    <img src={{$short->image}} class="img-fluid w-100 rounded-top" alt="">
                                                 </div>
                                                 <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{$short->category->name}}</div>
                                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">

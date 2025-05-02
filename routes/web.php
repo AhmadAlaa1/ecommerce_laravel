@@ -41,6 +41,8 @@ Route::get('/shop/cart/checkout',[CheckoutController::class,'index'])->name('che
 
 Route::post('/shop/cart/checkout',[CheckoutController::class,'store'])->name('checkout.store');
 
-Route::get('/admin', [AdminController::class, 'index'])
-    ->middleware('role:admin')
-    ->name('admin.index');
+Route::get('admin',[AdminController::class,'index'])->name('admin.index');
+
+// Route::middleware(['jwt.auth', 'admin.role'])->group(function () {
+//     Route::get('/admin', [AdminController::class, 'index']);
+// });
