@@ -278,7 +278,9 @@
 
  <!-- Template Javascript -->
  <script src="/js/main.js"></script>
- {{-- <script src="/js/RefreshToken.js"></script> --}}
+ <script src="/js/RefreshToken.js"></script>
+ <script src="/js/Loginform.js"></script>
+ <script src="/js/Registerform.js"></script>
 
 </body>
 

@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class CheckAdminRole
+class CheckUserRole
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $role): Response
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
@@ -16,8 +16,8 @@ class CheckAdminRole
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        if ($user->role !== 'admin') {
-            abort(403); // Show Laravel 403 Forbidden page
+        if ($user->role !== $role) {
+            return response()->json(['message' => 'Forbidden: Insufficient privileges'], 403);
         }
 
         return $next($request);

@@ -6,6 +6,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Middleware\CheckAdminRole;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\verifyToken;
 
@@ -41,8 +42,5 @@ Route::get('/shop/cart/checkout',[CheckoutController::class,'index'])->name('che
 
 Route::post('/shop/cart/checkout',[CheckoutController::class,'store'])->name('checkout.store');
 
-Route::get('admin',[AdminController::class,'index'])->name('admin.index');
+Route::get('/admin',[AdminController::class,'index'])->name('admin.index');
 
-// Route::middleware(['jwt.auth', 'admin.role'])->group(function () {
-//     Route::get('/admin', [AdminController::class, 'index']);
-// });

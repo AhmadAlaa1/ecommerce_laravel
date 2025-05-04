@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -14,14 +16,16 @@ class AuthController extends Controller
         $request->validate([
             'username'=>'required|max:20',
             'useremail'=>'required|unique:App\Models\User,email',
-            'password'=>'confirmed:password_confirmation|required|gt:4'
+            'password'=>'confirmed:password_confirmation|required|gt:4',
+            'telephone' => 'required|string'
         ]);
         
         $user=User::create([
             'name'=>$request->username,
             'email'=>$request->useremail,
             'password'=>Hash::make($request->password),
-            'role' => 'user'
+            'role' => 'user',
+            'teleNumber'=>Crypt::encrypt($request->telephone)
         ]);
         
         $token = Auth::guard('api')->login($user);
@@ -44,10 +48,12 @@ class AuthController extends Controller
 
         $user = Auth::guard('api')->user();
 
+        session()->put('user',$user);
         return response()->json([
             'token' => $token,
             'redirect_url' => $user->role === 'admin' ? '/admin' : '/home',
         ]);
+        
     }
 
 

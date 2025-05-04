@@ -21,6 +21,7 @@ active
     <input name="useremail" type="email" value="{{old('useremail')}}" class="w-100 form-control border-0 py-3 mb-4" placeholder="Enter Your Email">
     <input name="password" type="password" class="w-100 form-control border-0 py-3 mb-4" placeholder="Your Password"></input>
     <input name="password_confirmation" type="password" class="w-100 form-control border-0 py-3 mb-4" placeholder="Confirm The Password"></input>
+    <input name="telephone" type="text" value="{{ old('telephone') }}" class="w-100 form-control border-0 py-3 mb-4" placeholder="Your Phone Number">
     <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary " type="submit">Register</button>
     <div class="text-center mt-3">
         <a href="{{ route('home.login') }}" class="text-primary font-weight-bold text-decoration-none">
@@ -31,42 +32,7 @@ active
 </form>
 
 <script>
-  document.getElementById('registerform').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-
-    fetch('/api/register', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.token) {
-        const token = data.token;
-        const payload = JSON.parse(atob(token.split('.')[1]));
-
-        localStorage.setItem('token', token);
-
-        const userInfo = {
-          name: payload.name,
-          email: payload.email,
-          role: payload.role,
-          token: token 
-        };
-
-        localStorage.setItem('user', JSON.stringify(userInfo));
-
-        window.location.href = data.redirect_url;
-      } else {
-        alert(data.message || "Register failed");
-      }
-    })
-    .catch(err => {
-      console.error("Error decoding token or during registration:", err);
-      alert("Something went wrong.");
-    });
-  });
+  
 </script>
 
   

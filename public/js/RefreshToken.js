@@ -1,51 +1,42 @@
-// دالة عامة لإرسال أي طلب مع التوكن الحالي
-async function fetchWithAuth(url, options = {}) {
-    let token = localStorage.getItem('token');
 
-    if (!options.headers) {
-        options.headers = {};
-    }
+    async function checkAndRefreshToken() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user || !user.token) return;
 
-    // ضيف التوكن في الهيدر
-    options.headers['Authorization'] = `Bearer ${token}`;
-    options.headers['Accept'] = 'application/json';
+  const token = user.token;
+  const payload = JSON.parse(atob(token.split('.')[1]));
 
-    let response = await fetch(url, options);
+  const now = Math.floor(Date.now() / 1000); // Current time in seconds
 
-    if (response.status === 401) {
-        const data = await response.json();
+  if (payload.exp && payload.exp < now) {
+    console.log("Token expired, refreshing...");
 
-        if (data.error === 'token_expired') {
-            // لو التوكن منتهي، روح على /api/refresh
-            const refreshResponse = await fetch('/api/refresh', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                }
-            });
-
-            const refreshData = await refreshResponse.json();
-
-            if (refreshResponse.ok) {
-                const newToken = refreshData.msg;
-
-                // خزن التوكن الجديد
-                localStorage.setItem('token', newToken);
-
-                // عيد إرسال الريكوست اللي كان فشل
-                options.headers['Authorization'] = `Bearer ${newToken}`;
-
-                response = await fetch(url, options);
-            } else {
-                // مشكلة في التحديث، امسح التوكن وخليه يروح يسجل دخول من جديد مثلا
-                localStorage.removeItem('token');
-                throw new Error('Unable to refresh token');
-            }
-        } else {
-            throw new Error('Unauthorized');
+    try {
+      const response = await fetch("/api/refresh", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Accept": "application/json"
         }
-    }
+      });
 
-    return response;
+      const data = await response.json();
+
+      if (data.msg) {
+        // Replace token in localStorage
+        user.token = data.msg;
+        localStorage.setItem("user", JSON.stringify(user));
+        console.log("Token refreshed successfully");
+      } else {
+        console.warn("Token refresh failed:", data);
+      }
+    } catch (err) {
+      console.error("Error refreshing token:", err);
+    }
+  } else {
+    console.log("Token is still valid.");
+  }
 }
+
+window.addEventListener('DOMContentLoaded', checkAndRefreshToken);
+
